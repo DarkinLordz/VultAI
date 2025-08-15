@@ -15,19 +15,7 @@ def talk(prompt):
     api = data["api"]
     model = data["model"]
 
-    if url == "https://openrouter.ai/api/v1/chat/completions":
-        messages = [{"role": "system", "content": personality}] + history + [{"role": "user", "content": prompt}]
-
-        headers = {"Authorization": f"Bearer {api}", "Content-Type": "application/json"}
-
-        payload = {"model": model, "messages": messages}
-        
-        response = requests.post(url, headers=headers, json=payload)
-        response.raise_for_status()
-
-        return response.json()["choices"][0]["message"]["content"]
-    
-    if url == "https://api.groq.com/openai/v1/chat/completions":
+    if url == "https://openrouter.ai/api/v1/chat/completions" or url == "https://api.groq.com/openai/v1/chat/completions":
         messages = [{"role": "system", "content": personality}] + history + [{"role": "user", "content": prompt}]
 
         headers = {"Authorization": f"Bearer {api}", "Content-Type": "application/json"}
