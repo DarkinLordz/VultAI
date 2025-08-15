@@ -2,14 +2,10 @@ import customtkinter as ctk
 import file
 import api
 
-def theme_toggle():
-    global theme_switch_variable
-    if ctk.get_appearance_mode() == "Dark":
-        ctk.set_appearance_mode("Light")
-        theme_switch_variable.set("Light")
-    elif ctk.get_appearance_mode() == "Light":
-        ctk.set_appearance_mode("Dark")
-        theme_switch_variable.set("Dark")
+def theme_command():
+    ctk.set_appearance_mode(theme_variable.get())
+    file.theme_save(theme_variable.get())
+    theme_switch.configure(text=theme_variable.get())
 
 def flush_command():
     file.history_delete()
@@ -26,8 +22,6 @@ def chat_send(event=None):
     prompt = entry.get()
     if prompt == "/flush":
         flush_command()
-    elif prompt == "/theme":
-        theme_toggle()
     elif prompt == "/exit":
         root.destroy()
         return
@@ -43,10 +37,11 @@ def chat_send(event=None):
     entry.delete(0, "end")
 
 file.file_ensure()
+theme = file.theme_check()
 image = file.image_return()
 image_exists = bool(image)
 
-ctk.set_appearance_mode("Dark")
+ctk.set_appearance_mode(theme)
 ctk.ThemeManager.theme["CTkFont"] = {"family":"Segoe UI", "size":15, "weight":"normal"}
 
 root = ctk.CTk()
@@ -71,8 +66,8 @@ if image_exists:
     image_label = ctk.CTkLabel(top_frame, image=image, text="")
     image_label.pack(side="left", anchor="n", pady=5, padx=5)
 
-theme_switch_variable = ctk.StringVar(value="Dark")
-theme_switch = ctk.CTkSwitch(top_frame, command=theme_toggle, onvalue="Light", offvalue="Dark", variable=theme_switch_variable, text="Theme")
+theme_variable = ctk.StringVar(master=root, value=theme)
+theme_switch = ctk.CTkSwitch(top_frame, command=theme_command, onvalue="Light", offvalue="Dark", variable=theme_variable, text=theme_variable.get())
 theme_switch.pack(pady=10, padx=10, side="left", anchor="n")
 
 root.mainloop()

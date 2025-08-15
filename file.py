@@ -6,17 +6,18 @@ import os
 
 def file_ensure():
     
-    api_json = {
+    config = {
         "api": "",
         "url": "",
-        "model": ""
+        "model": "",
+        "theme": "Dark"
     }
 
     if not os.path.exists("assets"):
         os.mkdir("assets")
-    if not os.path.exists("config.json"):
+    if not os.path.exists("config.json") or os.path.getsize("config.json") == 0:
         with open("config.json", "w", encoding="utf-8") as file:
-            json.dump(api_json, file, indent=4)
+            json.dump(config, file, indent=4)
     if not os.path.exists("history.json") or os.path.getsize("history.json") == 0:
         with open("history.json", "w", encoding="utf-8") as file:
             json.dump([], file)
@@ -42,8 +43,21 @@ def history_delete():
         json.dump([], file, indent=4)
 
 def log_save(error):
-    with open("log.txt", "a") as file:
+    with open("log.txt", "a", encoding="utf-8") as file:
         file.write(f"[{timestamp()}]: {error}\n")
+
+def theme_check():
+    with open("config.json", "r", encoding="utf-8") as file:
+        data = json.load(file)
+        theme = data["theme"]
+    return theme
+    
+def theme_save(theme_variable):
+    with open("config.json", "r", encoding="utf-8") as file:
+        data = json.load(file)
+    data["theme"] = theme_variable
+    with open("config.json", "w", encoding="utf-8") as file:
+        json.dump(data, file, indent=4)
 
 def image_return():
     if os.path.exists("assets/image.png"):
