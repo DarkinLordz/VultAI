@@ -7,6 +7,3 @@ It's manually set-up, you must enter your API key, Endpoint, AI model.
 - customtkinter
 - requests
 - pillow
-### Branches
-The "main" branch is reserved for trusted friends.
-Every contributor may contribute to the "contributors".
