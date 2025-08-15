@@ -2,7 +2,7 @@ import customtkinter as ctk
 import file
 import api
 
-def theme():
+def theme_toggle():
     global theme_switch_variable
     if ctk.get_appearance_mode() == "Dark":
         ctk.set_appearance_mode("Light")
@@ -11,27 +11,34 @@ def theme():
         ctk.set_appearance_mode("Dark")
         theme_switch_variable.set("Dark")
 
-def filter():
+def filter_toggle():
     file.filter_toggle(filter_switch_variable.get())
 
-def flush():
+def flush_command():
     file.history_delete()
     chat_label.configure(text="")
 
-def chat(event=None):
+def interact_with_ai(prompt):
+    try:
+        answer = api.talk(prompt)
+        return answer
+    except Exception as error:
+        return error
+
+def chat_send(event=None):
     prompt = entry.get()
     if prompt == "/flush":
-        flush()
+        flush_command()
     elif prompt == "/theme":
-        theme()
+        theme_toggle()
     elif prompt == "/exit":
         root.destroy()
         return
     else:
         try:
-            answer = api.talk(prompt)
-            chat_label.configure(text=answer)
+            answer = interact_with_ai(prompt)
             interaction = [{"role":"user", "content":prompt}, {"role":"assistant", "content":answer}]
+            chat_label.configure(text=answer)
             file.history_save(interaction)
         except Exception as error:
             chat_label.configure(text=error)
@@ -57,7 +64,7 @@ chat_label = ctk.CTkLabel(bottom_frame, text="", wraplength=780)
 chat_label.pack(pady=10, padx=10, anchor="nw", side="top")
 
 entry = ctk.CTkEntry(bottom_frame, width=780)
-entry.bind("<Return>", chat)
+entry.bind("<Return>", chat_send)
 entry.pack(side="bottom", anchor="s", pady=5, padx=5)
 
 top_frame = ctk.CTkFrame(root)
@@ -68,11 +75,11 @@ if image_exists:
     image_label.pack(side="left", anchor="n", pady=5, padx=5)
 
 theme_switch_variable = ctk.StringVar(value="Dark")
-theme_switch = ctk.CTkSwitch(top_frame, command=theme, onvalue="Light", offvalue="Dark", variable=theme_switch_variable, text="Theme")
+theme_switch = ctk.CTkSwitch(top_frame, command=theme_toggle, onvalue="Light", offvalue="Dark", variable=theme_switch_variable, text="Theme")
 theme_switch.pack(pady=10, padx=10, side="left", anchor="n")
 
 filter_switch_variable = ctk.StringVar(value="filter_off")
-filter_switch = ctk.CTkSwitch(top_frame, command=filter, variable=filter_switch_variable, onvalue="filter_on", offvalue="filter_off", text="Filter")
+filter_switch = ctk.CTkSwitch(top_frame, command=filter_toggle, variable=filter_switch_variable, onvalue="filter_on", offvalue="filter_off", text="Filter")
 filter_switch.pack(pady=10, padx=10, side="left", anchor="n")
 
 root.mainloop()

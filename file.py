@@ -61,3 +61,5 @@ def image_return():
     if os.path.exists("assets/image.png"):
         image = Image.open("assets/image.png")
         return ctk.CTkImage(image, size=(200, 200))
+    else:
+        return False
