@@ -1,7 +1,7 @@
 import requests
 import json
 
-def talk(prompt):
+def send_request(prompt):
     with open("config.json", "r", encoding="utf-8") as file:
         data = json.load(file)
 

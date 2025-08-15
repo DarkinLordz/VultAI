@@ -20,7 +20,7 @@ def flush_command():
 
 def interact_with_ai(prompt):
     try:
-        answer = api.talk(prompt)
+        answer = api.send_request(prompt)
         return answer
     except Exception as error:
         return error
