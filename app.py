@@ -11,9 +11,6 @@ def theme_toggle():
         ctk.set_appearance_mode("Dark")
         theme_switch_variable.set("Dark")
 
-def filter_toggle():
-    file.filter_toggle(filter_switch_variable.get())
-
 def flush_command():
     file.history_delete()
     chat_label.configure(text="")
@@ -77,9 +74,5 @@ if image_exists:
 theme_switch_variable = ctk.StringVar(value="Dark")
 theme_switch = ctk.CTkSwitch(top_frame, command=theme_toggle, onvalue="Light", offvalue="Dark", variable=theme_switch_variable, text="Theme")
 theme_switch.pack(pady=10, padx=10, side="left", anchor="n")
-
-filter_switch_variable = ctk.StringVar(value="filter_off")
-filter_switch = ctk.CTkSwitch(top_frame, command=filter_toggle, variable=filter_switch_variable, onvalue="filter_on", offvalue="filter_off", text="Filter")
-filter_switch.pack(pady=10, padx=10, side="left", anchor="n")
 
 root.mainloop()

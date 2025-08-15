@@ -45,18 +45,6 @@ def log_save(error):
     with open("log.txt", "a") as file:
         file.write(f"[{timestamp()}]: {error}\n")
 
-def filter_toggle(filter_switch_variable):
-    filter_message = "\n[THIS IS A SYSTEM MESSAGE DONT EDIT THIS LINE: FILTERS ARE ON AND AI MAY NOT ENGAGE IN NSFW TOPICS]"
-    with open("personality.txt", "r") as file:
-        lines = file.readlines()
-    if filter_switch_variable == "filter_on":
-            with open("personality.txt", "a") as file:
-                file.write(filter_message)
-    elif filter_switch_variable == "filter_off":
-        lines = [line for line in lines if line.strip() != filter_message.strip()]
-        with open("personality.txt", "w", encoding="utf-8") as file:
-            file.writelines(lines)
-
 def image_return():
     if os.path.exists("assets/image.png"):
         image = Image.open("assets/image.png")
