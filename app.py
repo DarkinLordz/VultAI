@@ -39,7 +39,6 @@ def chat_send(event=None):
 file.file_ensure()
 theme = file.theme_check()
 image = file.image_return()
-image_exists = bool(image)
 
 ctk.set_appearance_mode(theme)
 ctk.ThemeManager.theme["CTkFont"] = {"family":"Segoe UI", "size":15, "weight":"normal"}
@@ -62,9 +61,8 @@ entry.pack(side="bottom", anchor="s", pady=5, padx=5)
 top_frame = ctk.CTkFrame(root)
 top_frame.pack(side="right", anchor="n", padx=5, pady=5, fill="both", expand=True)
 
-if image_exists:
-    image_label = ctk.CTkLabel(top_frame, image=image, text="")
-    image_label.pack(side="left", anchor="n", pady=5, padx=5)
+image_label = ctk.CTkLabel(top_frame, image=image, text="")
+image_label.pack(side="left", anchor="n", pady=5, padx=5)
 
 theme_variable = ctk.StringVar(master=root, value=theme)
 theme_switch = ctk.CTkSwitch(top_frame, command=theme_command, onvalue="Light", offvalue="Dark", variable=theme_variable, text=theme_variable.get())

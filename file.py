@@ -15,6 +15,8 @@ def file_ensure():
 
     if not os.path.exists("assets"):
         os.mkdir("assets")
+    if not os.path.exists("assets/image.png") or os.path.getsize("assets/image.png") == 0:
+        (Image.new("RGB", (200, 200), color=(0, 0, 0))).save("assets/image.png")
     if not os.path.exists("config.json") or os.path.getsize("config.json") == 0:
         with open("config.json", "w", encoding="utf-8") as file:
             json.dump(config, file, indent=4)
