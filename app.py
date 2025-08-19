@@ -9,7 +9,7 @@ def theme_command():
 
 def flush_command():
     file.history_delete()
-    chat_label.configure(text="")
+    chat_box.delete("1.0", "end")
 
 def interact_with_ai(prompt):
     try:
@@ -20,6 +20,9 @@ def interact_with_ai(prompt):
 
 def chat_send(event=None):
     prompt = entry.get()
+    if not prompt:
+        return #Avoiding accidental messages.
+    chat_box.configure(state="normal")
     if prompt == "/flush":
         flush_command()
     elif prompt == "/exit":
@@ -28,12 +31,17 @@ def chat_send(event=None):
     else:
         try:
             answer = interact_with_ai(prompt)
+            if not answer:
+                file.log_save("API configuration error detected. Ensure your API settings are correct, or contact 'darkinlordz' on Discord for support.")
+                return #If API is not correctly configured, Requests will return None.
             interaction = [{"role":"user", "content":prompt}, {"role":"assistant", "content":answer}]
-            chat_label.configure(text=answer)
+            chat_box.insert("end", f"You: {prompt}\n\nAI: {answer}\n\n")
             file.history_save(interaction)
         except Exception as error:
-            chat_label.configure(text=error)
+            chat_box.insert("end", f"You: {prompt}\n\nAI: {error}\n\n")
             file.log_save(error)
+    chat_box.see("end")
+    chat_box.configure(state="disabled")
     entry.delete(0, "end")
 
 file.file_ensure()
@@ -46,13 +54,13 @@ ctk.ThemeManager.theme["CTkFont"] = {"family":"Segoe UI", "size":15, "weight":"n
 root = ctk.CTk()
 root.title("VultAI")
 root.geometry("800x600")
-root.resizable(False, False)
+root.resizable(True, True)
 
 bottom_frame = ctk.CTkFrame(root)
 bottom_frame.pack(side="bottom", anchor="e", padx=5, pady=5, fill="both", expand=True)
 
-chat_label = ctk.CTkLabel(bottom_frame, text="", wraplength=780)
-chat_label.pack(pady=10, padx=10, anchor="nw", side="top")
+chat_box = ctk.CTkTextbox(bottom_frame, wrap="word", state="disabled")
+chat_box.pack(pady=10, padx=10, fill="both", expand=True)
 
 entry = ctk.CTkEntry(bottom_frame, width=780)
 entry.bind("<Return>", chat_send)
