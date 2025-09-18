@@ -61,6 +61,15 @@ def theme_save(theme_variable):
     with open("config.json", "w", encoding="utf-8") as file:
         json.dump(data, file, indent=4)
 
+def api_save(api, url, model):
+    with open("config.json", "r", encoding="utf-8") as file:
+        data = json.load(file)
+    data["api"] = api
+    data["url"] = url
+    data["model"] = model
+    with open("config.json", "w", encoding="utf-8") as file:
+        json.dump(data, file, indent=4)
+
 def image_return():
     if os.path.exists("assets/image.png"):
         image = Image.open("assets/image.png")
