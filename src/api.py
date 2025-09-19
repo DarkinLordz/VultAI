@@ -1,14 +1,15 @@
+from path import CONFIG_FILE, HISTORY_FILE, PERSONALITY_FILE
 import requests
 import json
 
 def send_request(prompt):
-    with open("config.json", "r", encoding="utf-8") as file:
+    with open(CONFIG_FILE, "r", encoding="utf-8") as file:
         data = json.load(file)
 
-    with open("history.json", "r", encoding="utf-8") as file:
+    with open(HISTORY_FILE, "r", encoding="utf-8") as file:
         history = json.load(file)
 
-    with open("personality.txt", "r", encoding="utf-8") as file:
+    with open(PERSONALITY_FILE, "r", encoding="utf-8") as file:
         personality = file.read()
 
     url = data["url"]
